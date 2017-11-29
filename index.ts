@@ -36,7 +36,7 @@ export const BindableInput = function () {
       get: ngGet
     };
 
-	Object.assign(targetPropertyMeta, targetPropertyAccessors)
+    Object.assign(targetPropertyMeta, targetPropertyAccessors);
     Object.defineProperty(target, paramKey, targetPropertyMeta);
     Object.defineProperty(target, paramEmitterKey, targetPropertyEmitterMeta);
 
