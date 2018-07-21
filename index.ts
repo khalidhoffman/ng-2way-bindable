@@ -5,14 +5,15 @@ import {
 } from "@angular/core";
 import set = Reflect.set;
 
+interface BindableInputCache {
+  [key: string]: any
+}
+
 export const BindableInput = function () {
   return function (target: any, paramKey: string) {
     const paramEmitterKey = `${paramKey}Change`;
-    const store: { [key: string]: any } = { [paramEmitterKey]: new EventEmitter<string>() };
-    const targetPropertyMeta = {
-      enumerable: true,
-      configurable: true
-    };
+    const store: BindableInputCache = { [paramEmitterKey]: new EventEmitter<string>() };
+    const targetPropertyMeta = { enumerable: true, configurable: true };
     const targetPropertyEmitterMeta = {
       enumerable: true,
       configurable: true,
@@ -24,11 +25,10 @@ export const BindableInput = function () {
       store[paramEmitterKey].emit(store[paramKey]);
     };
 
-    const ngGet = function () {
-      return store[paramKey];
-    };
-
     const targetPropertyAccessors = {
+      get: function () {
+        return store[paramKey];
+      },
       set: function (val: any) {
         if (!store[paramEmitterKey].instance) {
           this[paramEmitterKey] = store[paramEmitterKey];
@@ -36,7 +36,7 @@ export const BindableInput = function () {
           store[paramEmitterKey].instance = this;
         }
         ngSet(val);
-      }, get: ngGet
+      }
     };
 
     Object.assign(targetPropertyMeta, targetPropertyAccessors);
