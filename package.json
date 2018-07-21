@@ -4,8 +4,10 @@
   "description": "2-way binding decorator for angular 2+",
   "main": "index.js",
   "scripts": {
-    "test": "mocha",
-    "postinstall": "tsc"
+    "postinstall": "npm run build:quiet",
+    "build": "tsc",
+    "build:quiet": "npm run build | true",
+    "test": "cd test/app && npm install && ng test --watch=false"
   },
   "repository": {
     "type": "git",
